@@ -1,7 +1,9 @@
 import express from "express";
 import cors from "cors";
 import connectDB from "./DB/index.js";
+import dotenv from "dotenv";
 
+dotenv.config();
 
 // load the environment variable
 const app = express();
