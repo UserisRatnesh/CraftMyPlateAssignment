@@ -1,6 +1,9 @@
 import express from "express";
 import cors from "cors";
+import connectDB from "./DB/index.js";
 
+
+// load the environment variable
 const app = express();
 app.use(cors());
 
@@ -11,6 +14,8 @@ app.get("/", (req, res) => {
     return res.json({ msg: "This is home route" });
 
 });
+
+connectDB();
 
 app.listen(3000, () => {
     console.log("Server started at port 3000...");
