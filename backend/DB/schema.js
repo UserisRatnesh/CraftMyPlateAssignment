@@ -9,6 +9,7 @@ const userModel = new mongoose.Schema({
 const menuModel = new mongoose.Schema({
     name: { type: String, required: true },
     category: { type: String },
+    imageLink: { type: String },
     price: { type: Number, required: true },
     availability: { type: Boolean, default: true }
 });
@@ -24,7 +25,7 @@ const orderModel = new mongoose.Schema({
     items: {
         menuId: {
             type: mongoose.Schema.Types.ObjectId,
-            ref: 'Menu',
+            ref: 'MenuItem',
             required: true
         },
         quantity: { type: Number, required: true }
@@ -47,8 +48,8 @@ const orderModel = new mongoose.Schema({
 
 
 const User = mongoose.model('User', userModel);
-const Menu = mongoose.model('Menu', menuModel);
+const MenuItem = mongoose.model('MenuItem', menuModel);
 const Order = mongoose.model('Order', orderModel);
 
 
-export { User, Menu, Order };
+export { User, MenuItem, Order };

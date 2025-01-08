@@ -3,6 +3,7 @@ import cors from "cors";
 import connectDB from "./DB/index.js";
 import dotenv from "dotenv";
 import userRouter from "./router/user.js"
+import menuRouter from "./router/menu.js"
 dotenv.config();
 
 // load the environment variable
@@ -15,6 +16,7 @@ connectDB();
 
 // Routers
 app.use("/user", userRouter);
+app.use("/menu", menuRouter);
 
 
 app.listen(3000, () => {

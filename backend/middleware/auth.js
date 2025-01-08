@@ -5,7 +5,7 @@ dotenv.config();
 
 const SECRET = process.env.SECRET;
 
-const authenticateJwt = (res, req, next) => {
+const authenticateJwt = (req, res, next) => {
     const authHeader = req.headers.authorization;
     if (authHeader) {
         const token = authHeader.split(' ')[1];
@@ -13,8 +13,6 @@ const authenticateJwt = (res, req, next) => {
             if (err) {
                 return res.sendStatus(403);
             }
-
-
             req.user = user;
             next();
         });
@@ -23,4 +21,4 @@ const authenticateJwt = (res, req, next) => {
     }
 };
 
-export default  authenticateJwt;
+export default authenticateJwt;
