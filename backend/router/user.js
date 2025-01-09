@@ -17,12 +17,12 @@ router.get("/", (req, res) => {
 router.post("/login", async (req, res) => {
     try {
         const { username, password } = req.body;
-        const existingUser = await User.findOne({ username });
+        const existingUser = await User.findOne({ username, password });
         if (!existingUser) {
             return res.status(403).json({ msg: 'User does not exists' });
         }
 
-        const token = jwt.sign({ username }, SECRET, { expiresIn: '1h' });
+        const token = jwt.sign({ username, password }, SECRET, { expiresIn: '1h' });
         res.json({ msg: 'Logged in successfully', token });
     }
     catch (err) {
@@ -33,9 +33,8 @@ router.post("/login", async (req, res) => {
 
 router.post("/signup", async (req, res) => {
     try {
-        console.log("This is body = ", req.body);
         const { username, password } = req.body;
-        const existingUser = await User.findOne({ username });
+        const existingUser = await User.findOne({ username, password });
         if (existingUser) {
             return res.status(403).json({ msg: 'User already exists' });
         }
@@ -43,7 +42,7 @@ router.post("/signup", async (req, res) => {
         const newUser = new User({ username, password });
         await newUser.save();
 
-        const token = jwt.sign({ username }, SECRET, { expiresIn: '1h' });
+        const token = jwt.sign({ username, password }, SECRET, { expiresIn: '1h' });
         res.json({ msg: 'User created successfully', token });
     }
     catch (err) {

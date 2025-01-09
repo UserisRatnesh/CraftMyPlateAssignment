@@ -22,14 +22,17 @@ const orderModel = new mongoose.Schema({
     },
 
     // Array of menu items ( menu id and quantity)
-    items: {
-        menuId: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'MenuItem',
-            required: true
-        },
-        quantity: { type: Number, required: true }
-    },
+    items: [
+        {
+            itemId: {
+
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'MenuItem',
+                required: true
+            },
+            quantity: { type: Number, required: true }
+        }
+    ],
 
     // calculated total price
     totalAmount: { type: Number, required: true },

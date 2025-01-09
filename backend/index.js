@@ -1,10 +1,9 @@
 import express from "express";
 import cors from "cors";
 import connectDB from "./DB/index.js";
-import dotenv from "dotenv";
-import userRouter from "./router/user.js"
-import menuRouter from "./router/menu.js"
-dotenv.config();
+import userRouter from "./router/user.js";
+import menuRouter from "./router/menu.js";
+import orderRouter from "./router/order.js";
 
 // load the environment variable
 const app = express();
@@ -17,6 +16,7 @@ connectDB();
 // Routers
 app.use("/user", userRouter);
 app.use("/menu", menuRouter);
+app.use("/order", orderRouter);
 
 
 app.listen(3000, () => {

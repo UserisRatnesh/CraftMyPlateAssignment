@@ -13,7 +13,7 @@ router.get("/", authenticateJwt, async (req, res) => {
         res.json({ menuItems });
     } catch (error) {
         console.log(error);
-        res.sendStatus(500).json({ msg: "Error in fetching menu items" });
+        res.status(500).json({ msg: "Error in fetching menu items" });
     }
 });
 
@@ -27,7 +27,7 @@ router.post("/", authenticateJwt, async (req, res) => {
     }
     catch (error) {
         console.log(error);
-        res.sendStatus(401).json({ msg: "Error adding new item" });
+        res.status(401).json({ msg: "Error adding new item" });
     }
 
 });
