@@ -7,9 +7,13 @@ import { User, MenuItem, Order } from "../DB/schema.js";
 const router = express.Router();
 
 // Place an order with selected menu items and quantities
-router.post("/addItem/:itemId", authenticateJwt, async (req, res) => {
+router.post("/addItem/:itemId/:quantity", authenticateJwt, async (req, res) => {
 
     try {
+        const { itemId, quantity } = req.params;
+        if (!Number.isInteger(Number(quantity)) || Number(quantity) <= 0) {
+            return res.status(400).json({ msg: "Invalid quantity" });
+        }
         const username = req.user.username;
         const password = req.user.password;
         const user = await User.findOne({ username, password });
@@ -18,16 +22,16 @@ router.post("/addItem/:itemId", authenticateJwt, async (req, res) => {
         }
         const userId = user._id;
 
-        const itemId = req.params.itemId;
-        let quantity = 2;
         const item = await MenuItem.findById({ _id: itemId });
+        if (!item) {
+            return res.status(404).json({ msg: "Item not found" });
+        }
         console.log("THIS IS ITEM ", item);
 
         // Find that order which is pending
         // since new will be added to pending one
         // If there is no pending then create one
-        const order = await Order.findOne({ userId });
-        console.log(order);
+        const order = await Order.findOne({ userId, status: 'pending' });
         if (!order) {
             // create one
             let items = [{ itemId, quantity }];
@@ -43,10 +47,13 @@ router.post("/addItem/:itemId", authenticateJwt, async (req, res) => {
         }
 
 
-        let totalAmount = order.totalAmount;
-        totalAmount += item.price * quantity;
-        order.items.push({ itemId, quantity });
-        order.totalAmount = totalAmount;
+        const existingItem = order.items.find(i => i.itemId.toString() === itemId);
+        if (existingItem) {
+            existingItem.quantity += Number(quantity);
+        } else {
+            order.items.push({ itemId, quantity });
+        }
+        order.totalAmount += item.price * quantity;
         await order.save();
         res.json({ msg: "Item added successfully", order });
     }
@@ -72,7 +79,7 @@ router.post("/submit", authenticateJwt, async (req, res) => {
         }
         const userId = user._id;
 
-        const order = await Order.findOne({ userId });
+        const order = await Order.findOne({ userId, status: 'pending' });
         if (!order) {
             res.json({ msg: "Order not found" });
         }
